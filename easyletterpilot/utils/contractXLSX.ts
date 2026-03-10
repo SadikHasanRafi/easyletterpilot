@@ -18,11 +18,20 @@ function excelTimeToString(value: number) {
   return `${String(hours).padStart(2,"0")}:${String(minutes).padStart(2,"0")}`
 }
 
+
+
+
+
+function makeLowerCase(str: string) {
+  
+  return str ? String(str).toLowerCase() : "";
+}
+
 //eslint-disable-next-line
 function transformRow(row: any): AttendanceRecord {
   return {
     date: excelDateToJSDate(row["Date"]),
-    status: row["Status"],
+    status: makeLowerCase(row["Status"]),
     id: String(row["ID"]),
     name: row["NAME"],
     department: row["DEPARTMENT"],
@@ -31,6 +40,8 @@ function transformRow(row: any): AttendanceRecord {
     division: row["Division"]
   }
 }
+
+
 
 
 

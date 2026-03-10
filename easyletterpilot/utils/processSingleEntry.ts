@@ -1,4 +1,5 @@
 import { AttendanceRecord } from "@/types/TableTypesI"
+import { processEmail } from "./processEmail"
 
 
 
@@ -13,8 +14,11 @@ export const processSingleEntry = (singleEntryData: AttendanceRecord[],emailData
             return m
         }
     })
-    console.log("🚀 ~ processSingleEntry.ts:16 ~ processSingleEntry ~ email:",email && email.email)
+    
 
+    if(email){
+        processEmail(singleEntryData,email )
+    }
 
 }
 
