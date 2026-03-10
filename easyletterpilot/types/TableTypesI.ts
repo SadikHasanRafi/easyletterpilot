@@ -7,4 +7,5 @@ export interface AttendanceRecord {
   posting: string
   inTime: string
   division: string
+  email?: string
 }

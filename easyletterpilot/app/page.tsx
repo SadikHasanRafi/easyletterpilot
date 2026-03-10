@@ -2,6 +2,7 @@
 
 import { AttendanceRecord } from "@/types/TableTypesI";
 import { getXLSXData } from "@/utils/contractXLSX";
+import { getEmailXLSX } from "@/utils/getEmailXLSX";
 import { processSingleEntry } from "@/utils/processSingleEntry";
 import { sortUniqueData } from "@/utils/sortUniqueData";
 import React, { useRef, useState } from "react";
@@ -9,11 +10,32 @@ import React, { useRef, useState } from "react";
 export default function Home() {
   const [excelData, setExcelData] = useState<AttendanceRecord[]>([]);
   const fileInputRef = useRef<HTMLInputElement | null>(null)
+  const [getEmail, setGetEmail] = useState([])
+  const emailInputRef = useRef<HTMLInputElement | null>(null)
+
+
+
+
+
 
 
   const handleParseExcel = async () => {
     const file = fileInputRef.current?.files?.[0];
     if (!file) return;
+
+
+    const emailFile = emailInputRef.current?.files?.[0];
+    if (!emailFile) return;
+
+    
+      getEmailXLSX(emailFile)
+      .then((data) =>{
+        setGetEmail(data as [])
+      })
+      .catch((err) => console.error("Error reading Excel:", err));
+
+
+
 
     getXLSXData(file)
       .then((data) =>{
@@ -24,17 +46,14 @@ export default function Home() {
       .catch((err) => console.error("Error reading Excel:", err));
   };
 
-
-
-
   const processLateAbsentData = (data: AttendanceRecord[]) => {
       const sortedData = sortUniqueData(data)
-      console.log("🚀 ~ page.tsx:31 ~ processLateAbsentData ~ sortedData:", sortedData)
       const singleEntryData: AttendanceRecord[] = []
       
-      
-      
-      
+
+
+
+
       
       for (let i = 0; i < sortedData.length; i++) {
         // console.log("🚀 ~ page.tsx:39 ~ processLateAbsentData ~ i:", i)
@@ -52,13 +71,23 @@ export default function Home() {
               // console.log("🚀 ~ page.tsx:44 ~ 🍎 ~  j:",  j)
 
               i = j - 1
-              
-              
-              processSingleEntry(singleEntryData)
 
 
-                // console.log("----------------------:")
-                singleEntryData.length = 0
+       
+
+                // console.log("🚀 ~ page.tsx:81 ~ processLateAbsentData ~ email:", emailData.email )
+
+                // console.log("🚀 ~ page.tsx:78 ~ processLateAbsentData ~ email:", email)
+                
+     
+                
+                // console.log("🚀 ~ page.tsx:87 ~ processLateAbsentData ~ singleEntryData:", singleEntryData[0].email)
+                processSingleEntry(singleEntryData,getEmail)
+
+                  // console.log("----------------------:")
+                  singleEntryData.length = 0
+              
+
                 
               break
 
@@ -81,17 +110,47 @@ export default function Home() {
   return (
     <div>
       <h1>Read Excel File in React</h1>
-      <input ref={fileInputRef}  type="file" accept=".csv, .xlsx, .xls"  className="file-input file-input-accent" />
-      <button onClick={handleParseExcel} className="btn btn-accent">
-        Upload Excel
-      </button>
 
 
 
-      <input ref={fileInputRef}  type="file" accept=".csv, .xlsx, .xls"  className="file-input file-input-secondary" />
-      <button onClick={handleParseExcel} className="btn btn-secondary">
-        Upload Excel
-      </button>
+
+
+
+      <div className="flex flex-col gap-8 p-6"> 
+        {/* Section 1 */}
+        <div className="flex flex-col sm:flex-row items-center gap-4 p-4  shadow-sm">
+          <input 
+            ref={fileInputRef} 
+            type="file" 
+            accept=".csv, .xlsx, .xls" 
+            className="file-input file-input-bordered file-input-accent w-full max-w-xs" 
+          />
+
+
+         <input 
+            ref={emailInputRef} 
+            type="file" 
+            placeholder=".csv, .xlsx, .xls" 
+            className="file-input file-input-bordered file-input-secondary w-full max-w-xs" 
+          />
+
+          <button onClick={handleParseExcel} className="btn btn-primary px-8">
+            Upload Excel
+          </button>
+        </div>
+
+
+
+
+      </div>
+
+
+
+
+
+
+
+
 
 
       {/* Optional: Display the data in a table or list */}
