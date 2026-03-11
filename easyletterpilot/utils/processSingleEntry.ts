@@ -17,7 +17,7 @@ export const processSingleEntry = (singleEntryData: AttendanceRecord[],emailData
     
 
     if(email){
-        processEmail(singleEntryData,email )
+       const report =  processEmail(singleEntryData,email )
     }
 
 }

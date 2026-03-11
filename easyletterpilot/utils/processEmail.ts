@@ -1,37 +1,113 @@
 import { AttendanceRecord } from "@/types/TableTypesI";
+import { generateTable } from "./generateTable";
+
+
+
 
 export const processEmail = (singleData: AttendanceRecord[], emailData: { id: string; email: string }) => {
-  // console.log("🚀 ~ processSingleEntry ~ singleEntryData:", singleData)
+
+
+      const report : {
+      absentTable:string,
+      sickLeave:string,
+      notAppliedYet:string,
+      lateTable:string,
+      casualLeave:string
+    } = {
+      absentTable:"", sickLeave:"", notAppliedYet:"", lateTable:"",casualLeave:""
+    }
+
 
   singleData.map((data) => {
+
+    
     switch (data.status) {
-        case "absent":
-          console.log("🚀 ~ processEmail.ts:8 ~ processEmail ~ data:", data)
-        
+      
+      case "absent":
+        report.absentTable = generateTable(
+          singleData,
+          [
+            { key: "date", label: "Date" },
+            { key: "department", label: "Department" },
+            { key: "posting", label: "Posting" },
+            { key: "division", label: "Division" },
+          ],
+          "Absent",
+        );
+
+        console.log(report.absentTable);
         break;
 
       case "casual leave":
-                  console.log("🚀 ~ processEmail.ts:8 ~ processEmail ~ data:", data)
+         report.casualLeave = generateTable(
+          singleData,
+          [
+            { key: "date", label: "Date" },
+            { key: "department", label: "Department" },
+            { key: "posting", label: "Posting" },
+            { key: "division", label: "Division" },
+          ],
+          "Casual Leave",
+        );
+
+        console.log(report.casualLeave);
 
         break;
 
       case "late":
-          console.log("🚀 ~ processEmail.ts:8 ~ processEmail ~ data:", data)
+         report.lateTable = generateTable(
+          singleData,
+          [
+            { key: "date", label: "Date" },
+            { key: "inTime", label: "In Time" },
+            { key: "department", label: "Department" },
+            { key: "posting", label: "Posting" },
+            { key: "division", label: "Division" },
+          ],
+          "Late Attendance",
+        );
 
-      break;
+        console.log(report.lateTable);
 
+        break;
+      
       case "not applied yet":
-          console.log("🚀 ~ processEmail.ts:8 ~ processEmail ~ data:", data)
+         report.notAppliedYet = generateTable(
+          singleData,
+          [
+            { key: "date", label: "Date" },
+            { key: "department", label: "Department" },
+            { key: "posting", label: "Posting" },
+            { key: "division", label: "Division" },
+          ],
+          "Not Applied Yet",
+        );
 
-      break;
+        console.log(report.notAppliedYet);
+
+        break;
 
       case "sick leave":
-          console.log("🚀 ~ processEmail.ts:8 ~ processEmail ~ data:", data)
+         report.sickLeave = generateTable(
+          singleData,
+          [
+            { key: "date", label: "Date" },
+            { key: "department", label: "Department" },
+            { key: "posting", label: "Posting" },
+            { key: "division", label: "Division" },
+          ],
+          "Sick Leave",
+        );
 
-      break;
+        console.log(report.sickLeave);
+
+        break;
 
       default:
-        break;
+      
+      break;
     }
   });
+
+  return report
 };
